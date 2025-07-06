@@ -1,0 +1,27 @@
+.env
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.DS_Store
+.idea/
+.vscode/
+.pytest_cache/
+.ipynb_checkpoints/
+# Model and artifact files
+models/
+*.pkl
+*.bin
+# System files
+Thumbs.db
+# Ignore test and temp outputs
+*.log
+# Do not ignore sample data
+!data/sample_articles.csv
+!data/custom_dataset.csv
+# Ignore other data files by default
+/data/*.tmp
+/data/*.bak
+.env
