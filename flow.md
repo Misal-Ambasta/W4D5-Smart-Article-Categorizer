@@ -22,16 +22,16 @@ User -> main() or Streamlit UI -> ArticleCategorizer.__init__() -> ArticleCatego
 **Mermaid:**
 ```mermaid
 flowchart TD
-    A[User] -->|Start training| B(main() or Streamlit UI)
-    B --> C[ArticleCategorizer.__init__()]
-    C --> D[create_sample_dataset()]
-    D --> E[train_all_models()]
-    E --> F[train_word2vec_embeddings()]
-    E --> G[_initialize_embeddings()]
-    E --> H[get_embeddings()]
-    E --> I[train_classifier()]
-    E --> J[evaluate_model()]
-    E --> K[save_models()]
+    A[User] -->|Start training| B["main() or Streamlit UI"]
+    B --> C["ArticleCategorizer.__init__()"]
+    C --> D["create_sample_dataset()"]
+    D --> E["train_all_models()"]
+    E --> F["train_word2vec_embeddings()"]
+    E --> G["_initialize_embeddings()"]
+    E --> H["get_embeddings()"]
+    E --> I["train_classifier()"]
+    E --> J["evaluate_model()"]
+    E --> K["save_models()"]
 ```
 
 ---
@@ -52,11 +52,11 @@ User -> predict_all_models() -> For each model:
 **Mermaid:**
 ```mermaid
 flowchart TD
-    A[User] -->|Enter article| B[predict_all_models()]
-    B --> C[preprocess_text()]
-    B --> D[get_embeddings()]
-    B --> E[model.predict()]
-    E --> F[Decode label]
+    A[User] -->|Enter article| B["predict_all_models()"]
+    B --> C["preprocess_text()"]
+    C --> D["get_embeddings()"]
+    D --> E["model.predict()"]
+    E --> F["Decode label"]
 ```
 
 ---
@@ -73,8 +73,8 @@ User -> ArticleCategorizer.save_models() -> joblib.dump() for each model/encoder
 **Mermaid:**
 ```mermaid
 flowchart TD
-    A[User] -->|Save| B[save_models()]
-    B --> C[joblib.dump()]
+    A[User] -->|Save| B["save_models()"]
+    B --> C["joblib.dump()"]
 ```
 
 ---
@@ -91,8 +91,8 @@ User -> ArticleCategorizer.load_models() -> joblib.load() for each model/encoder
 **Mermaid:**
 ```mermaid
 flowchart TD
-    A[User] -->|Load| B[load_models()]
-    B --> C[joblib.load()]
+    A[User] -->|Load| B["load_models()"]
+    B --> C["joblib.load()"]
 ```
 
 ---
@@ -109,16 +109,81 @@ User (browser) -> Streamlit app (create_streamlit_app) -> ArticleCategorizer met
 **Mermaid:**
 ```mermaid
 flowchart TD
-    A[User (browser)] -->|Interact| B[Streamlit app]
-    B --> C[ArticleCategorizer methods]
+    A["User (browser)"] -->|Interact| B["Streamlit app"]
+    B --> C["ArticleCategorizer methods"]
+```
+
+---
+
+## Complete System Architecture
+
+**Mermaid:**
+```mermaid
+flowchart TD
+    subgraph "User Interface"
+        UI1[Script Interface]
+        UI2[Streamlit Web UI]
+    end
+    
+    subgraph "Core System"
+        AC[ArticleCategorizer]
+        DS[create_sample_dataset]
+        TAM[train_all_models]
+        PAM[predict_all_models]
+    end
+    
+    subgraph "Model Training"
+        TW[train_word2vec_embeddings]
+        IE[_initialize_embeddings]
+        GE[get_embeddings]
+        TC[train_classifier]
+        EM[evaluate_model]
+    end
+    
+    subgraph "Model Persistence"
+        SM[save_models]
+        LM[load_models]
+        JD[joblib.dump]
+        JL[joblib.load]
+    end
+    
+    subgraph "Prediction Pipeline"
+        PT[preprocess_text]
+        GE2[get_embeddings]
+        MP[model.predict]
+        DL[Decode label]
+    end
+    
+    UI1 --> AC
+    UI2 --> AC
+    AC --> DS
+    AC --> TAM
+    AC --> PAM
+    
+    TAM --> TW
+    TAM --> IE
+    TAM --> GE
+    TAM --> TC
+    TAM --> EM
+    
+    AC --> SM
+    AC --> LM
+    SM --> JD
+    LM --> JL
+    
+    PAM --> PT
+    PAM --> GE2
+    PAM --> MP
+    PAM --> DL
 ```
 
 ---
 
 ## Notes
 - All embedding APIs are called via their respective LangChain wrappers (OpenAI, HuggingFace, etc.)
-- The flow is similar whether run from script or Streamlit UI.
-- Each endpoint is a method in `ArticleCategorizer` or the Streamlit UI function.
+- The flow is similar whether run from script or Streamlit UI
+- Each endpoint is a method in `ArticleCategorizer` or the Streamlit UI function
+- Function names and method calls are properly quoted to handle special characters
 
 ---
 
